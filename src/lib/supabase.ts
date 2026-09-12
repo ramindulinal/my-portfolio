@@ -1,0 +1,3 @@
+import { createClient } from '@supabase/supabase-js'
+export const supabase = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY ? createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY) : null
+export async function uploadAsset(file: File, bucket = 'portfolio-assets') { if (!supabase) return null; const path = `${crypto.randomUUID()}-${file.name.replace(/[^a-z0-9.-]/gi, '-')}`; const { error } = await supabase.storage.from(bucket).upload(path, file, { upsert: false }); if (error) throw error; return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl }
